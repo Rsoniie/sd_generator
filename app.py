@@ -7,8 +7,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-
-# print(os.getenv('GEMINI_API_KEY'))
 client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
 @app.route('/generate_hld', methods=['POST'])
