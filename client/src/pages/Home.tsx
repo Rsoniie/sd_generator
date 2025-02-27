@@ -1,10 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 const HomePage = () => {
+    const navigate = useNavigate();
+
+
+    const inputRef = useRef<HTMLInputElement>(null);
     const [darkMode, setDarkMode] = useState(() => {
         // Load theme preference from local storage (persistent theme)
         return localStorage.getItem("theme") === "dark";
     });
+
+    const handleSubmit = () => {
+        if(inputRef.current) {
+
+            localStorage.setItem("prompt", inputRef.current.value);
+            console.log(inputRef.current.value);
+
+            inputRef.current.value = "";
+            navigate('/response');
+        }
+        else 
+        {
+            alert("Please enter a Prompt");
+        }
+        
+    }
 
     useEffect(() => {
         if (darkMode) {
@@ -40,13 +64,14 @@ const HomePage = () => {
                 <section className="search-input-section bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-md rounded-full flex items-center w-96 hover:shadow-lg transition-shadow">
                     <input
                         type="text"
+                        ref = {inputRef}
                         placeholder="Search Google or type a URL"
                         className="search-input flex-1 py-4 px-6 focus:outline-none rounded-full bg-transparent text-gray-700 dark:text-gray-300 placeholder-gray-400 dark:placeholder-gray-500"
                     />
                 </section>
 
                 <section className="buttons-section mt-8">
-                    <button className="bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-lg mr-4 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none transition-colors">
+                    <button className="bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-lg mr-4 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none transition-colors" onClick={handleSubmit}>
                         Submit
                     </button>
                     {/* <button className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-6 py-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none transition-colors">

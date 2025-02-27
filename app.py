@@ -3,10 +3,12 @@ import os
 import requests
 from dotenv import load_dotenv
 from google import genai
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
