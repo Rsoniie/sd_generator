@@ -54,19 +54,22 @@ def generate_hld():
     Scalability & Security: Address scalability considerations and security best practices.
     Deployment Strategy: Describe the deployment model (cloud, on-premises, hybrid).
     Ensure that the HLD is well-structured, concise, and provides a clear technical blueprint for implementation.
-    try to give syntax in wbs syntax:
-   @startwbs
-    * Business Process Modelling WBS
-    ** Launch the project
-    *** Complete Stakeholder Research
-    *** Initial Implementation Plan
-    ** Design phase
-    *** Model of AsIs Processes Completed
-    ****< Model of AsIs Processes Completed1
-    ****> Model of AsIs Processes Completed2
-    ***< Measure AsIs performance metrics
-    ***< Identify Quick Wins
-    @endwbs
+    try to give syntax in mindmap syntax:
+    @startmindmap
+    * Debian
+    ** Ubuntu
+    *** Linux Mint
+    *** Kubuntu
+    *** Lubuntu
+    *** KDE Neon
+    ** LMDE
+    ** SolydXK
+    ** SteamOS
+    ** Raspbian with a very long name
+    *** <s>Raspmbc</s> => OSMC
+    *** <s>Raspyfi</s> => Volumio
+    @endmindmap
+
 
     This is the sample syntax for wbs generation of code.
     No need to add any extra texts only the code is enough
@@ -80,6 +83,8 @@ def generate_hld():
     # },
     )
     
+    
+    # return response.text
     image_data, content_type = generate(response.text)
     
     # Right after calling `response = requests.post(...)`
