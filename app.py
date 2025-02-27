@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 import os
+import requests
 from dotenv import load_dotenv
 from google import genai
 
@@ -8,6 +9,27 @@ load_dotenv()
 app = Flask(__name__)
 
 client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
+
+
+
+def generate(text_data):
+    
+    print(text_data)
+    
+    api_url = "http://localhost:8080/svg"
+    print(api_url)
+    response = requests.post(api_url, data=text_data, headers={"Content-Type": "text/plain"}, stream=True)
+
+    
+    print("Status Code:", response.status_code)
+    print("Response Headers:", response.headers)
+    print("Response Content (first 500 chars):", response.text[:500])
+    
+    # return response.content
+    if response.status_code == 200:
+        return response.content, response.headers.get('Content-Type', 'image/svg+xml')
+    else: 
+        return None, None
 
 @app.route('/generate_hld', methods=['POST'])
 def generate_hld():
@@ -52,8 +74,19 @@ def generate_hld():
     #     'response_mime_type': 'application/json',
     # },
     )
+    
+    image_data, content_type = generate(response.text)
+    
+    # Right after calling `response = requests.post(...)`
 
-    return response.text
+
+
+    if image_data:
+        return Response(image_data, content_type=content_type)
+    else:
+        return jsonify({"error": "Failed to fetch image"}), 500
+
+    # return response.text
 
 
 @app.route('/generate_workflow', methods = ['POST'])
@@ -86,8 +119,22 @@ def generate_workflow():
     #     'response_mime_type': 'application/json',
     # },
     )
-
+    
     return response.text
+    print("Just before calling the function")
+    image_data, content_type = generate(response.text)
+    
+    # Right after calling `response = requests.post(...)`
+
+
+
+    if image_data:
+        return Response(image_data, content_type=content_type)
+    else:
+        return jsonify({"error": "Failed to fetch image"}), 500
+    
+    # return image_data
+
 
 
 @app.route('/generate_lld', methods = ['POST'])
@@ -121,6 +168,8 @@ def generate_lld():
         'response_mime_type': 'application/json',
     },
     )
+    
+    
 
     return response.text
 

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const images: { [key: string]: string } = {
-        // button1: 'https://via.placeholder.com/400x300.png?text=Image+1',
         button1 : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPbxqmJmak5MSh6gaXAiORiQM5U-Q3c8q7Dg&s',
         button2: 'https://media.geeksforgeeks.org/wp-content/uploads/20230202105033/rate-limiter.png',
         button3: 'https://miro.medium.com/v2/resize:fit:799/1*bsdz59Udf39VYrwiNyF1Tw.jpeg'
