@@ -12,6 +12,9 @@ client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
 
 
+
+def wrap_text(text):
+    return f"""@startjson \n {text} \n @endjson"""
 def generate(text_data):
     
     print(text_data)
@@ -120,6 +123,8 @@ def generate_workflow():
     # },
     )
     
+    
+    
     return response.text
     print("Just before calling the function")
     image_data, content_type = generate(response.text)
@@ -169,9 +174,16 @@ def generate_lld():
     },
     )
     
+    text_data  = wrap_text(response.text)
     
 
-    return response.text
+    
+    image_data, content_type = generate(text_data)
+
+    if image_data:
+        return Response(image_data, content_type=content_type)
+    else:
+        return jsonify({"error": "Failed to fetch image"}), 500
 
 
 if __name__ == '__main__':
