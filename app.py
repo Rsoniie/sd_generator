@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request,send_from_directory, jsonify, Response
 import os
 import requests
 from dotenv import load_dotenv
@@ -8,6 +8,11 @@ from flask_cors import CORS
 load_dotenv()
 
 app = Flask(__name__)
+
+# @app.route('/')
+# @app.route("/<path:path>")
+# def server_frontend(path = "index.html"):
+#     return send_from_directory(app.static_folder, path)
 CORS(app)
 
 client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
