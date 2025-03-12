@@ -58,7 +58,7 @@ __pycache__/
 .env
 .flaskenv
 
-myenv/
+# myenv/
 
 # VSCode
 .vscode/
