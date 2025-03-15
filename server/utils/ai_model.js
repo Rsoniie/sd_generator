@@ -64,8 +64,6 @@ const generate_code = async(prompt, req, res) => {
     in flowchart syntax
     Only generate code in flowchart syntax no need of any extra texts. please make sure not to give any syntax error `
     const result = await model.generateContent(fullPrompt);
-    // console.log(result.response.text());
-
     return result.response.text();
 }
 
