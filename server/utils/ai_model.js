@@ -3,44 +3,53 @@ const genai = new GoogleGenerativeAI(`${process.env.GEMINI_API_KEY}`);
 const model = genai.getGenerativeModel({ model: "gemini-2.0-flash"
 });
 
-const generate_code = async(prompt, req, res) => {
-    console.log("Promp from generate code", prompt);
+const training_flowchart = async(req, res) => {
+    console.log("Training flowchart");
+    const fullPrompt = `This is for your training data first you have to train yourself according  to the syntax and work
+    First I am sharing some of the syntax
+    syntax 1 : 
+    flowchart TD
+        A[Start] --> B{Is it?}
+        B -->|Yes| C[OK]
+        C --> D[Rethink]
+        D --> B
+        B ---->|No| E[End]
 
-            
-    const fullPrompt = `
-    Use from technology point of view.
-    Generate a high-level design (HLD) in brief for a ${prompt} system. The system should include an overview of the architecture, key components, data flow, and interactions. Consider the following aspects:
 
-    System Overview: Describe the purpose and functionality of the system.
-    Architecture: Define the architecture (Monolithic, Microservices, Serverless, etc.).
-    Key Components: Identify the main modules/services and their responsibilities.
-    Technology Stack: Suggest technologies (backend, frontend, database, cloud services).
-    Data Flow: Explain how data moves within the system.
-    API Design: Outline key APIs and their usage.
-    Scalability & Security: Address scalability considerations and security best practices.
-    Deployment Strategy: Describe the deployment model (cloud, on-premises, hybrid).
+    syntax 2 : 
+    flowchart TD
+        A[Start] --> B{Is it?}
+        B -- Yes --> C[OK]
+        C --> D[Rethink]
+        D --> B
+        B -- No ----> E[End]
 
-    Ensure that the HLD is well-structured, concise, and provides a clear technical blueprint for implementation.
 
-    Strictly order give in this format syntax in mindmap syntax:
-    @startmindmap
-    * Debian
-    ** Ubuntu
-    *** Linux Mint
-    *** Kubuntu
-    *** Lubuntu
-    *** KDE Neon
-    ** LMDE
-    ** SolydXK
-    ** SteamOS
-    ** Raspbian with a very long name
-    *** <s>Raspmbc</s> => OSMC
-    *** <s>Raspyfi</s> => Volumio
-    @endmindmap
 
-    This is the sample syntax for wbs generation of code.
-    No need to add any extra texts only the code is enough
-    `;
+    I am giving a url also first train yoursel according to that url
+    here is the url : https://mermaid.js.org/syntax/flowchart.html
+    // after training you can use the syntax whenever someone called in flowchart diagram.
+    // 
+    ✅ Removed colons (:) inside node brackets: Mermaid.js treats colons as syntax delimiters, so wrapping the entire text inside double quotes ("...") ensures it's treated as plain text.
+    ✅ Kept proper node formatting ([] for process, {} for decisions): But avoided {} in this flow as no decision nodes were needed.
+    ✅ Ensured correct indentation and spacing: Mermaid.js is sensitive to formatting.
+    Removed multi-line text in {} decision nodes
+
+    "Request Type?" → "Request Type"
+    "Retrieve Data from Data Source (e.g., Database, API)" → "Retrieve Data from Data Source"
+    Mermaid does not support multi-line text in decision nodes {}.
+    Ensured all arrows (-->) are correctly formatted
+
+    Used proper edge labels instead of -- Multi-line Text -->.
+    Ensured all nodes are explicitly linked
+
+    Fixed missing flow for error responses (J → L, K → L).
+    
+    this is the error i faced
+    It's a strict instruction please train yourself properly as there is not scope or error in the syntax`
+
+    const rprompt = "are you ready to code in that syntax of flowchart diagram which is given in the url?";
+   
 
     const result = await model.generateContent(fullPrompt);
     console.log(result.response.text());
@@ -49,4 +58,15 @@ const generate_code = async(prompt, req, res) => {
     
 }
 
-export default generate_code;
+const generate_code = async(prompt, req, res) => {
+    console.log("Promp from generate code", prompt);
+    const fullPrompt = `Please generate a detailed high level design for ${prompt}
+    in flowchart syntax
+    Only generate code in flowchart syntax no need of any extra texts. please make sure not to give any syntax error `
+    const result = await model.generateContent(fullPrompt);
+    // console.log(result.response.text());
+
+    return result.response.text();
+}
+
+export {training_flowchart, generate_code};

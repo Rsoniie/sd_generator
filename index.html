@@ -1,190 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>D3.js Architecture Diagram</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-    }
-    .link {
-      fill: none;
-      stroke: #ccc;
-      stroke-width: 2px;
-    }
-    .node circle {
-      fill: #fff;
-      stroke: steelblue;
-      stroke-width: 3px;
-    }
-    .node text {
-      font: 12px sans-serif;
-    }
-    #tree-container {
-      width: 90vw; /* 90% of viewport width */
-      height: 90vh; /* 90% of viewport height */
-      overflow: auto;
-      margin: 0 auto; /* Center the container */
-    }
-    svg {
-      display: block;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid.js High-Level Design</title>
 </head>
 <body>
-  <div id="tree-container"></div>
 
-  <script>
-    const data = {
-      "name": "Blogging Application",
-      "children": [
-        {
-          "name": "Frontend",
-          "children": [
-            { "name": "UI Components" },
-            { "name": "Routing (React Router/Vue Router)" },
-            { "name": "State Management (Redux/Vuex)" },
-            { "name": "API Integration (Fetch/Axios)" },
-            { "name": "Markdown Editor" },
-            { "name": "Image Upload/Handling" },
-            { "name": "Responsive Design" },
-            { "name": "SEO Optimization" },
-            { "name": "Authentication (Client-side)" },
-            { "name": "Comments Display" },
-            { "name": "Search Functionality" },
-            { "name": "Category/Tag Filtering" },
-          ],
-        },
-        {
-          "name": "Backend",
-          "children": [
-            {
-              "name": "API Layer",
-              "children": [
-                { "name": "RESTful API Endpoints" },
-                { "name": "GraphQL API (Optional)" },
-                { "name": "Authentication (Server-side)" },
-                { "name": "Authorization" },
-                { "name": "Input Validation" },
-                { "name": "Error Handling" },
-                { "name": "Rate Limiting" },
-              ],
-            },
-            {
-              "name": "Application Logic",
-              "children": [
-                { "name": "Post Management (CRUD)" },
-                { "name": "User Management" },
-                { "name": "Comment Management" },
-                { "name": "Category/Tag Management" },
-                { "name": "Search Indexing" },
-                { "name": "Image Processing/Storage" },
-                { "name": "Notifications (Optional)" },
-                { "name": "Analytics (Optional)" },
-              ],
-            },
-            {
-              "name": "Data Storage",
-              "children": [
-                { "name": "Database (PostgreSQL/MySQL/MongoDB)" },
-                { "name": "File Storage (S3/Cloud Storage)" },
-                { "name": "Caching (Redis/Memcached)" },
-                { "name": "Search Index (Elasticsearch/Solr)" },
-              ],
-            },
-            {
-              "name": "Server Infrastructure",
-              "children": [
-                { "name": "Web Server (Nginx/Apache)" },
-                { "name": "Application Server (Node.js/Python/Java)" },
-                { "name": "Load Balancer" },
-                { "name": "Containerization (Docker)" },
-                { "name": "Orchestration (Kubernetes)" },
-                { "name": "Monitoring and Logging" },
-              ],
-            },
-          ],
-        },
-        {
-          "name": "Deployment",
-          "children": [
-            { "name": "CI/CD Pipeline (Jenkins/GitLab CI)" },
-            { "name": "Cloud Provider (AWS/Azure/GCP)" },
-            { "name": "Version Control (Git)" },
-            { "name": "Automated Testing" },
-            { "name": "Staging Environment" },
-            { "name": "Production Environment" },
-          ],
-        },
-        {
-          "name": "Security",
-          "children": [
-            { "name": "HTTPS" },
-            { "name": "Input Sanitization" },
-            { "name": "Cross-Site Scripting (XSS) Protection" },
-            { "name": "Cross-Site Request Forgery (CSRF) Protection" },
-            { "name": "SQL Injection Protection" },
-            { "name": "Regular Security Audits" },
-            { "name": "Access Control" },
-          ],
-        },
-      ],
-    };
+    <h2>Mermaid.js High-Level Design Flowchart</h2>
 
-    const margin = { top: 40, right: 120, bottom: 40, left: 120 }; // Increased margins
-    const width = 2000 - margin.left - margin.right; // Increased width
-    const height = 1000 - margin.top - margin.bottom; // Increased height
+    <div class="mermaid">
 
-    const svg = d3
-      .select("#tree-container")
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      graph TD
+      A[Start] --> B{User Input?};
+      B -- Yes --> C[Parse Input & Validate];
+      B -- No --> Z[End];
+      C --> D{Valid Input?};
+      D -- Yes --> E[Process Input];
+      D -- No --> F[Error Handling & User Feedback];
+      E --> G{Data Source?};
+      G -- Yes --> H[Retrieve Data from Data Source];
+      G -- No --> I[Generate Data or Use Default];
+      H --> J[Transform Data];
+      I --> J;
+      J --> K[Format Output];
+      K --> L[Display Output to User];
+      L --> Z;
+      F --> L;
+      Z[End];
+  
+  
+    </div>
 
-    const tree = d3.tree().size([height, width]);
-    const root = d3.hierarchy(data);
-    tree(root);
+    <!-- Mermaid.js Import -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 
-    const link = svg
-      .selectAll(".link")
-      .data(root.links())
-      .enter()
-      .append("path")
-      .attr("class", "link")
-      .attr("fill", "none")
-      .attr("stroke", "#ccc")
-      .attr("stroke-width", "2px")
-      .attr(
-        "d",
-        d3
-          .linkHorizontal()
-          .x((d) => d.y)
-          .y((d) => d.x)
-      );
-
-    const node = svg
-      .selectAll(".node")
-      .data(root.descendants())
-      .enter()
-      .append("g")
-      .attr("class", (d) => "node" + (d.children ? " node--internal" : " node--leaf"))
-      .attr("transform", (d) => "translate(" + d.y + "," + d.x + ")");
-
-    node
-      .append("circle")
-      .attr("r", 10)
-      .attr("fill", "#fff")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", "3px");
-
-    node
-      .append("text")
-      .attr("dy", ".35em")
-      .attr("x", (d) => (d.children ? -13 : 13))
-      .style("text-anchor", (d) => (d.children ? "end" : "start"))
-      .text((d) => d.data.name);
-  </script>
 </body>
 </html>
