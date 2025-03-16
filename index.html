@@ -11,25 +11,38 @@
 
     <div class="mermaid">
 
-      graph TD
-      A[Start] --> B{User Input?};
-      B -- Yes --> C[Parse Input & Validate];
-      B -- No --> Z[End];
-      C --> D{Valid Input?};
-      D -- Yes --> E[Process Input];
-      D -- No --> F[Error Handling & User Feedback];
-      E --> G{Data Source?};
-      G -- Yes --> H[Retrieve Data from Data Source];
-      G -- No --> I[Generate Data or Use Default];
-      H --> J[Transform Data];
-      I --> J;
-      J --> K[Format Output];
-      K --> L[Display Output to User];
-      L --> Z;
-      F --> L;
-      Z[End];
-  
-  
+
+        graph TD
+    A[User initiates request] --> B{Is request valid?};
+    B -- Yes --> C[Parse request and extract parameters];
+    B -- No --> Z[Return error message to user];
+    C --> D[Route request to appropriate service];
+    D --> E{Determine Service Type};   
+    E -- Type A --> F[Service A: Process request];
+    F --> G[Service A: Access data store];
+    G --> H{Data found?};
+    H -- Yes --> I[Service A: Transform data];
+    H -- No --> J[Service A: Return 'not found' response];
+    I --> K[Service A: Format response];
+    K --> L[Service A: Return response];
+    E -- Type B --> M[Service B: Process request];
+    M --> N[Service B: Validate input];
+    N --> O{Input valid?};
+    O -- Yes --> P[Service B: Perform complex operation];
+    O -- No --> Q[Service B: Return validation error];
+    P --> R[Service B: Update data store];
+    R --> S[Service B: Generate confirmation message];
+    S --> T[Service B: Format response];
+    T --> U[Service B: Return response];
+    J --> L
+    Q --> U
+    L --> Y[Return response to User]
+    U --> Y
+    Z --> Y
+
+
+    
+
     </div>
 
     <!-- Mermaid.js Import -->

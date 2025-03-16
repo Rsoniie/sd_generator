@@ -46,7 +46,8 @@ const training_flowchart = async(req, res) => {
     Fixed missing flow for error responses (J → L, K → L).
     
     this is the error i faced
-    It's a strict instruction please train yourself properly as there is not scope or error in the syntax`
+    It's a strict instruction please train yourself properly as there is not scope or error in the syntax
+    No need to write random text in between that creates error no need to give end statement no need to give styling feature to this take your time and train yourself properly`
 
     const rprompt = "are you ready to code in that syntax of flowchart diagram which is given in the url?";
    
@@ -62,7 +63,30 @@ const generate_code = async(prompt, req, res) => {
     console.log("Promp from generate code", prompt);
     const fullPrompt = `Please generate a detailed high level design for ${prompt}
     in flowchart syntax
-    Only generate code in flowchart syntax no need of any extra texts. please make sure not to give any syntax error `
+    Only generate code in flowchart syntax no need of any extra texts. please make sure not to give any syntax error
+    graph TD
+            A[User initiates request] --> B{Is request valid?};
+            B -- Yes --> C[Parse request and extract parameters];
+            B -- No --> Z[Return error message to user];
+            C --> D[Route request to appropriate service];
+            D --> E{Determine Service Type};   
+            E -- Type A --> F[Service A: Process request];
+            F --> G[Service A: Access data store];
+            G --> H{Data found?};
+            H -- Yes --> I[Service A: Transform data];
+            H -- No --> J[Service A: Return 'not found' response];
+            I --> K[Service A: Format response];
+            K --> L[Service A: Return response];
+            E -- Type B --> M[Service B: Process request];
+            M --> N[Service B: Validate input];
+            N --> O{Input valid?};
+            O -- Yes --> P[Service B: Perform complex operation];
+            O -- No --> Q[Service B: Return validation error];
+            P --> R[Service B: Update data store];
+            R --> S[Service B: Generate confirmation message];
+            S --> T[Service B: Format response];
+            T --> U[Service B: Return response];
+            This is the correct syntax no need to add any text in between and end statement only this is enough `
     const result = await model.generateContent(fullPrompt);
     return result.response.text();
 }

@@ -15,7 +15,7 @@ const HighlevelDesign = async(req, res) => {
     const final_response = clean_code(response);
 
     console.log(final_response);
-    return res.status(200).json({response});
+    return res.status(200).json({final_response});
 }
 
 const train = async(req, res) => {
