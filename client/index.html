@@ -10,6 +10,7 @@
       <input type="text" id="prompt" placeholder="What do you want to make" />
       <button type="button" id="flow">Generate Design Flow</button>
       <button type="button" id="sd">Generate System Design</button>
+      <button type="button" id="downloadSvg">Download as SVG</button>
     </form>
 
     <pre class="mermaid"></pre>
@@ -22,6 +23,7 @@
       const flow_btn = document.getElementById("flow");
       const area = document.querySelector(".mermaid");
       const sd_btn = document.querySelector("#sd");
+      const downloadSvgBtn = document.querySelector("#downloadSvg");
 
       area.style.display = "none";
 
@@ -70,6 +72,35 @@
         const { svg } = await mermaid.render('mermaid', graphDefinition);
         area.innerHTML = svg;
         area.style.display = "block";
+      });
+
+      downloadSvgBtn.addEventListener("click", () => {
+        // Find the rendered <svg> inside the .mermaid container
+        const svgElem = document.querySelector(".mermaid svg");
+
+        if (!svgElem) {
+          alert("No diagram available to download!");
+          return;
+        }
+
+        // Convert the SVG DOM node to a string
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(svgElem);
+
+        // Create a blob out of the SVG string
+        const blob = new Blob([svgStr], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+
+        // Create an <a> element to trigger the download
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "mermaid-diagram.svg";
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       });
     </script>
   </body>

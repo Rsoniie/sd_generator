@@ -48,10 +48,11 @@ const training_flowchart = async (req, res) => {
     It's a strict instruction please train yourself properly as there is not scope or error in the syntax
     No need to write random text in between that creates error no need to give end statement no need to give styling feature to this take your time and train yourself properly`;
 
-  const rprompt =
-    "are you ready to code in that syntax of flowchart diagram which is given in the url?";
+  const errorprompt =
+    "Syntax error please do check the sample and strictly follow the syntax and give perfect output";
+    const correct = "you are doing great keep it up and maintain this";
 
-  const result = await model.generateContent(fullPrompt);
+  const result = await model.generateContent(correct);
   console.log(result.response.text());
 
   return result.response.text();

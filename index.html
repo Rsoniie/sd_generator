@@ -1,65 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Mermaid.js High-Level Design</title>
-</head>
-<body>
+  </head>
+  <body>
+    <form>
+      <input type="text" id="prompt" placeholder="What do you want to make" />
+      <button type="button" id="flow">Generate Design Flow</button>
+      <button type="button" id="sd">Generate System Design</button>
+      <!-- New button to download the Mermaid diagram as SVG -->
+      <button type="button" id="downloadSvg">Download as SVG</button>
+    </form>
 
-    <h2>Mermaid.js High-Level Design Flowchart</h2>
+    <pre class="mermaid" style="display: none;"></pre>
 
-    <div class="mermaid">
-        graph TD
-        %% EXAMPLE SYNTAX
-        X[Example Start] --> Y{Example Condition?};
-        Y -- Yes --> Z[Proceed with example logic];
-        Y -- No --> W[Return example error];
-    
-        %% SYSTEM DESIGN FOR ${prompt}
-        A[User initiates request] --> B{Is request valid?};
-        B -- Yes --> C[Parse request parameters];
-        B -- No --> Z[Return invalid request error];
-    
-        C --> D[Route to appropriate service];
-        D --> E{Service Type?};
-    
-        %% Service A branch
-        E -- Type A --> F[Service A: Perform main operation];
-        F --> G[Service A: Access data store];
-        G --> H{Data found?};
-        H -- Yes --> I[Service A: Process data];
-        H -- No --> J[Service A: Return 'not found'];
-        I --> K[Service A: Format response];
-        K --> L[Service A: Send response];
-    
-        %% Service B branch
-        E -- Type B --> M[Service B: Validate input];
-        M --> N[Service B: Perform calculations];
-        N --> O{Complex steps needed?};
-        O -- Yes --> P[Service B: Execute complex logic];
-        O -- No --> Q[Service B: Simple response];
-        P --> R[Service B: Update data store];
-        R --> S[Service B: Create final output];
-        S --> T[Service B: Send response];
-        
-        %% Service C branch
-        E -- Type C --> U[Service C: Authenticate request];
-        U --> V[Service C: Check user permissions];
-        V --> W{Permissions valid?};
-        W -- Yes --> X[Service C: Provide secured resource];
-        W -- No --> Y[Service C: Return 'access denied'];
-        X --> AA[Service C: Format secured response];
-        AA --> AB[Service C: Send response];
-    
-
-    </div>
-
-    <!-- Mermaid.js Import -->
     <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true });
-    </script>
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      
+      // Initialize Mermaid once here. We'll re-initialize before each render as well.
+      mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
 
-</body>
+      const input_prompt = document.getElementById("prompt");
+      const flow_btn = document.getElementById("flow");
+      const sd_btn = document.getElementById("sd");
+      const downloadSvgBtn = document.getElementById("downloadSvg");
+      const area = document.querySelector(".mermaid");
+
+      // Helper function to re-render and display the Mermaid diagram
+      async function renderMermaid(graphDefinition) {
+        // Re-initialize mermaid before each new render
+        mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
+        // Use mermaid.render() to generate SVG code from the definition
+        const { svg } = await mermaid.render("mermaidGraph", graphDefinition);
+        area.innerHTML = svg;
+        area.style.display = "block";
+      }
+
+      // Event listener for "Generate Design Flow"
+      flow_btn.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        const userPrompt = input_prompt.value.trim();
+        if (!userPrompt) {
+          alert("Please enter something!");
+          return;
+        }
+
+        try {
+          const apiUrl = "http://localhost:5000/system_design/api/design_flow";
+          const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: userPrompt }),
+          });
+          const data = await response.json();
+          const graphDefinition = data.final_response;
+          await renderMermaid(graphDefinition);
+        } catch (error) {
+          console.error("Error fetching design flow:", error);
+        }
+      });
+
+      // Event listener for "Generate System Design"
+      sd_btn.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        const userPrompt = input_prompt.value.trim();
+        if (!userPrompt) {
+          alert("Please enter something!");
+          return;
+        }
+
+        try {
+          const apiUrl = "http://localhost:5000/system_design/api/system_design";
+          const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: userPrompt }),
+          });
+          const data = await response.json();
+          const graphDefinition = data.final_response;
+          await renderMermaid(graphDefinition);
+        } catch (error) {
+          console.error("Error fetching system design:", error);
+        }
+      });
+
+      // Event listener for "Download as SVG"
+      downloadSvgBtn.addEventListener("click", () => {
+        // Find the rendered <svg> inside the .mermaid container
+        const svgElem = document.querySelector(".mermaid svg");
+
+        if (!svgElem) {
+          alert("No diagram available to download!");
+          return;
+        }
+
+        // Convert the SVG DOM node to a string
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(svgElem);
+
+        // Create a blob out of the SVG string
+        const blob = new Blob([svgStr], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+
+        // Create an <a> element to trigger the download
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "mermaid-diagram.svg";
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
 </html>
