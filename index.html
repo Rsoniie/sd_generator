@@ -10,37 +10,47 @@
     <h2>Mermaid.js High-Level Design Flowchart</h2>
 
     <div class="mermaid">
-
-
         graph TD
-    A[User initiates request] --> B{Is request valid?};
-    B -- Yes --> C[Parse request and extract parameters];
-    B -- No --> Z[Return error message to user];
-    C --> D[Route request to appropriate service];
-    D --> E{Determine Service Type};   
-    E -- Type A --> F[Service A: Process request];
-    F --> G[Service A: Access data store];
-    G --> H{Data found?};
-    H -- Yes --> I[Service A: Transform data];
-    H -- No --> J[Service A: Return 'not found' response];
-    I --> K[Service A: Format response];
-    K --> L[Service A: Return response];
-    E -- Type B --> M[Service B: Process request];
-    M --> N[Service B: Validate input];
-    N --> O{Input valid?};
-    O -- Yes --> P[Service B: Perform complex operation];
-    O -- No --> Q[Service B: Return validation error];
-    P --> R[Service B: Update data store];
-    R --> S[Service B: Generate confirmation message];
-    S --> T[Service B: Format response];
-    T --> U[Service B: Return response];
-    J --> L
-    Q --> U
-    L --> Y[Return response to User]
-    U --> Y
-    Z --> Y
-
-
+        %% EXAMPLE SYNTAX
+        X[Example Start] --> Y{Example Condition?};
+        Y -- Yes --> Z[Proceed with example logic];
+        Y -- No --> W[Return example error];
+    
+        %% SYSTEM DESIGN FOR ${prompt}
+        A[User initiates request] --> B{Is request valid?};
+        B -- Yes --> C[Parse request parameters];
+        B -- No --> Z[Return invalid request error];
+    
+        C --> D[Route to appropriate service];
+        D --> E{Service Type?};
+    
+        %% Service A branch
+        E -- Type A --> F[Service A: Perform main operation];
+        F --> G[Service A: Access data store];
+        G --> H{Data found?};
+        H -- Yes --> I[Service A: Process data];
+        H -- No --> J[Service A: Return 'not found'];
+        I --> K[Service A: Format response];
+        K --> L[Service A: Send response];
+    
+        %% Service B branch
+        E -- Type B --> M[Service B: Validate input];
+        M --> N[Service B: Perform calculations];
+        N --> O{Complex steps needed?};
+        O -- Yes --> P[Service B: Execute complex logic];
+        O -- No --> Q[Service B: Simple response];
+        P --> R[Service B: Update data store];
+        R --> S[Service B: Create final output];
+        S --> T[Service B: Send response];
+        
+        %% Service C branch
+        E -- Type C --> U[Service C: Authenticate request];
+        U --> V[Service C: Check user permissions];
+        V --> W{Permissions valid?};
+        W -- Yes --> X[Service C: Provide secured resource];
+        W -- No --> Y[Service C: Return 'access denied'];
+        X --> AA[Service C: Format secured response];
+        AA --> AB[Service C: Send response];
     
 
     </div>
