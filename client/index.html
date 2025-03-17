@@ -39,7 +39,8 @@
           return;
         }
 
-        const apiUrl = "http://localhost:5000/system_design/api/design_flow";
+        // const apiUrl = "http://localhost:5000/system_design/api/design_flow";
+        const apiUrl = "https://sd-generator.onrender.com/system_design/api/design_flow";
         const response = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -63,7 +64,7 @@
           return;
         }
 
-        const apiUrl = "http://localhost:5000/system_design/api/system_design";
+        const apiUrl = "https://sd-generator.onrender.com/system_design/api/system_design";
         const response = await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
