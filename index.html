@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mermaid.js High-Level Design</title>
+  </head>
+  <body>
+    <form>
+      <input type="text" id="prompt" placeholder="What do you want to make" />
+      <button type="button" id="flow">Generate Design Flow</button>
+      <button type="button" id="sd">Generate System Design</button>
+      <button type="button" id="downloadSvg">Download as SVG</button>
+    </form>
+
+    <pre class="mermaid"></pre>
+
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
+
+
+      alert("If you find syntax error in generating then please refresh and try again");
+      const input_prompt = document.getElementById("prompt");
+      const flow_btn = document.getElementById("flow");
+      const area = document.querySelector(".mermaid");
+      const sd_btn = document.querySelector("#sd");
+      const downloadSvgBtn = document.querySelector("#downloadSvg");
+
+      area.style.display = "none";
+
+      flow_btn.addEventListener("click", async (event) => {
+        event.preventDefault();
+        mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
+        const userPrompt = input_prompt.value.trim();
+        console.log("This is the prompt", userPrompt);
+        if (!userPrompt) {
+          alert("Please enter something!");
+          return;
+        }
+
+        // const apiUrl = "http://localhost:5000/system_design/api/design_flow";
+        const apiUrl = "https://sd-generator.onrender.com/system_design/api/design_flow";
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: userPrompt }),
+        });
+        const data = await response.json();
+        const graphDefinition = data.final_response;
+        const { svg } = await mermaid.render('mermaid', graphDefinition);
+        area.innerHTML = svg;
+        area.style.display = "block";
+        alert("Please Download");
+      });
+
+      sd_btn.addEventListener("click", async (event) => {
+        event.preventDefault();
+        mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
+        const userPrompt = input_prompt.value.trim();
+        console.log("This is the prompt", userPrompt);
+        if (!userPrompt) {
+          alert("Please enter something!");
+          return;
+        }
+
+        const apiUrl = "https://sd-generator.onrender.com/system_design/api/system_design";
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: userPrompt }),
+        });
+
+        const data = await response.json();
+        const graphDefinition = data.final_response;
+        const { svg } = await mermaid.render('mermaid', graphDefinition);
+        area.innerHTML = svg;
+        area.style.display = "block";
+        alert("Please Download");
+      });
+
+      downloadSvgBtn.addEventListener("click", () => {
+        // Find the rendered <svg> inside the .mermaid container
+        const svgElem = document.querySelector(".mermaid svg");
+
+        if (!svgElem) {
+          alert("No diagram available to download!");
+          return;
+        }
+
+        // Convert the SVG DOM node to a string
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(svgElem);
+
+        // Create a blob out of the SVG string
+        const blob = new Blob([svgStr], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+
+        // Create an <a> element to trigger the download
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "mermaid-diagram.svg";
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
