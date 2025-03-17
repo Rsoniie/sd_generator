@@ -19,6 +19,8 @@
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
       mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
 
+
+      alert("If you find syntax error in generating then please refresh and try again");
       const input_prompt = document.getElementById("prompt");
       const flow_btn = document.getElementById("flow");
       const area = document.querySelector(".mermaid");
@@ -48,6 +50,7 @@
         const { svg } = await mermaid.render('mermaid', graphDefinition);
         area.innerHTML = svg;
         area.style.display = "block";
+        alert("Please Download");
       });
 
       sd_btn.addEventListener("click", async (event) => {
@@ -72,6 +75,7 @@
         const { svg } = await mermaid.render('mermaid', graphDefinition);
         area.innerHTML = svg;
         area.style.display = "block";
+        alert("Please Download");
       });
 
       downloadSvgBtn.addEventListener("click", () => {
