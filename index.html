@@ -39,6 +39,9 @@
           return;
         }
 
+        alert("Press Ok and wait until the diagram is generated");
+        
+
         // const apiUrl = "http://localhost:5000/system_design/api/design_flow";
         const apiUrl = "https://sd-generator.onrender.com/system_design/api/design_flow";
         const response = await fetch(apiUrl, {
@@ -63,6 +66,8 @@
           alert("Please enter something!");
           return;
         }
+
+        alert("Press Ok and wait until the diagram is generated");
 
         const apiUrl = "https://sd-generator.onrender.com/system_design/api/system_design";
         const response = await fetch(apiUrl, {
