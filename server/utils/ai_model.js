@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genai = new GoogleGenerativeAI(`${process.env.GEMINI_API_KEY}`);
-const model = genai.getGenerativeModel({ model: "gemini-2.0-flash" });
+// const model = genai.getGenerativeModel({ model: "gemini-2.0-flash" });
+const model = genai.getGenerativeModel({model: "tunedModels/designease-6ru3p5ncwkww"})
 
 const training_flowchart = async (req, res) => {
   console.log("Training flowchart");
@@ -58,82 +59,14 @@ const training_flowchart = async (req, res) => {
   return result.response.text();
 };
 
-// const design_flow_code = async (prompt, req, res) => {
-//   // console.log("Promp from generate code", prompt);
-//   const fullPrompt = `Generate a detailed user design flow for "${prompt}" using **Mermaid flowchart** syntax. 
-
-//   ### ⚠ STRICT INSTRUCTIONS:
-//   1. **ONLY** use the graph TD syntax shown below.  
-//   2. **DO NOT** add any extra text, explanations, or end statements.  
-//   3. **AVOID** any syntax errors (no <, unclosed brackets, etc.).  
-//   4. **Directly output** the flowchart code starting with graph TD.  
-//   5. **Cover multiple services and processes** relevant to "${prompt}" in the same style as the example.  
-//   6. **DO NOT** add headings, bullet points, or any commentary – **only** the code block.
-  
-//   ### 📌 EXAMPLE STRUCTURE (KEEP THIS EXACT FORMAT):
-//   graphTD
-//   %% Service A branch
-// E -- Type A --> F[Service A: Process request];
-// F --> G[Service A: Access data store];
-// G --> H{Data found?};
-// H -- Yes --> I[Service A: Transform data];
-// H -- No --> J[Service A: Return 'not found' response];
-// I --> K[Service A: Format response];
-// K --> L[Service A: Return response];
-
-// %% Service B branch
-// E -- Type B --> M[Service B: Process request];
-// M --> N[Service B: Validate input];
-// N --> O{Input valid?};
-// O -- Yes --> P[Service B: Perform complex operation];
-// O -- No --> Q[Service B: Return validation error];
-// P --> R[Service B: Update data store];
-// R --> S[Service B: Generate confirmation message];
-// S --> T[Service B: Format response];
-// T --> U[Service B: Return response];
-
-
-// `
-//   const result = await model.generateContent(fullPrompt);
-//   return result.response.text();
-// };
-
-
-
-// 2. DESIGN FLOW DIAGRAM PROMPT
 const design_flow_code = async (prompt, req, res) => {
-  const fullPrompt = `Generate a detailed user design flow for "${prompt}" using Mermaid flowchart syntax.
-
-1. ONLY use "graph TD".
-2. DO NOT add any extra text, explanations, or end statements.
-3. AVOID syntax errors (no <, no unclosed brackets).
-4. Output must start with "graph TD".
-5. Cover multiple services and processes relevant to "${prompt}" in the style shown.
-6. DO NOT add headings, bullets, or commentary—ONLY the code block.
-
-Example Structure (do NOT alter arrows or brackets, just rename or add nodes as needed):
-graph TD
-    %% Service A branch
-    E -- Type A --> F[Service A: Process request];
-    F --> G[Service A: Access data store];
-    G --> H{Data found?};
-    H -- Yes --> I[Service A: Transform data];
-    H -- No --> J[Service A: Return 'not found' response];
-    I --> K[Service A: Format response];
-    K --> L[Service A: Return response];
-
-    %% Service B branch
-    E -- Type B --> M[Service B: Process request];
-    M --> N[Service B: Validate input];
-    N --> O{Input valid?};
-    O -- Yes --> P[Service B: Perform complex operation];
-    O -- No --> Q[Service B: Return validation error];
-    P --> R[Service B: Update data store];
-    R --> S[Service B: Generate confirmation message];
-    S --> T[Service B: Format response];
-    T --> U[Service B: Return response];`;
-
+  const fullPrompt = `Generate a structured design flow for ${prompt} applications.
+   in flowchart diagram code. make sure not to make any syntax error.`
+  
+   console.log("Just before calling the model");
   const result = await model.generateContent(fullPrompt);
+
+  console.log("after calling the model")
   return result.response.text();
 };
 
@@ -182,9 +115,6 @@ graph TD
 //     return result.response.text();
 // };
 
-
-
-// 3. SYSTEM DESIGN FLOWCHART PROMPT
 const system_design_code = async (prompt, req, res) => {
   const fullPrompt = `Generate a detailed system design for "${prompt}" using Mermaid flowchart syntax.
 

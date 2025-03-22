@@ -6,117 +6,96 @@
     <title>Mermaid.js High-Level Design</title>
   </head>
   <body>
-    <form>
-      <input type="text" id="prompt" placeholder="What do you want to make" />
-      <button type="button" id="flow">Generate Design Flow</button>
-      <button type="button" id="sd">Generate System Design</button>
-      <!-- New button to download the Mermaid diagram as SVG -->
-      <button type="button" id="downloadSvg">Download as SVG</button>
-    </form>
 
-    <pre class="mermaid" style="display: none;"></pre>
+    <pre class="mermaid">
+
+      flowchart TD
+      A[Start] --> B{Is User Logged In?}
+      B -- Yes --> C[Display Homepage & Dashboard]
+      B -- No --> D[Show Login/Signup Page]
+      D --> E{User Authenticated?}
+      E -- Yes --> F[User Registration & Authentication]
+      E -- No --> G[Display Error Message]
+      F --> H{Profile Setup Complete?}
+      H -- Yes --> C
+      H -- No --> I[Complete Profile Setup]
+      I --> C
+      G --> D
+      C --> J{User Action}
+      J -- Use AI Chatbot --> K[Open Chat Interface]
+      J -- Generate AI Content --> L[Open AI Image/Video Generation]
+      J -- Build Automation --> M[Open No-Code/Low-Code Platform]
+      K --> N{Chat Actions}
+      N -- Start Conversation --> O[Interact with AI Model]
+      N -- View History --> P[Display Conversation History]
+      O --> Q{Response Received?}
+      Q -- Yes --> R[Display AI Response]
+      Q -- No --> K
+      R --> K
+      P --> K
+      L --> S{Content Generation Actions}
+      S -- Upload Input --> T[Upload Text/Image/Video]
+      S -- Set Parameters --> U[Choose Style, Resolution, etc.]
+      T --> V{Input Processed?}
+      V -- Yes --> W[Generate AI Content]
+      V -- No --> L
+      W --> X{Content Generated?}
+      X -- Yes --> Y[Preview & Download Content]
+      X -- No --> L
+      Y --> C
+      U --> W
+      M --> Z{Automation Actions}
+      Z -- Drag-and-Drop Components --> AA[Build App Interface]
+      Z -- Set Workflow --> AB[Define Automation Logic]
+      AA --> AC{App Built?}
+      AC -- Yes --> AD[Test & Deploy App]
+      AC -- No --> M
+      AD --> C
+      AB --> AE{Workflow Defined?}
+      AE -- Yes --> AF[Save & Run Workflow]
+      AE -- No --> M
+      AF --> C
+      C --> AG{API & Developer Tools}
+      AG -- Access API --> AH[Generate API Key]
+      AG -- Integrate Webhooks --> AI[Set Up Webhooks]
+      AH --> AJ{API Key Generated?}
+      AJ -- Yes --> AK[Use API for AI Services]
+      AJ -- No --> AG
+      AK --> C
+      AI --> AL{Webhooks Set Up?}
+      AL -- Yes --> AM[Test Webhook Integration]
+      AL -- No --> AG
+      AM --> C
+      C --> AN{Monetization & Subscription Plans}
+      AN -- Upgrade to Premium --> AO[Purchase Premium Plan]
+      AN -- Pay-Per-Use --> AP[Buy API Credits]
+      AO --> AQ{Payment Successful?}
+      AQ -- Yes --> AR[Activate Premium Features]
+      AQ -- No --> AN
+      AR --> C
+      AP --> AS{Credits Purchased?}
+      AS -- Yes --> AT[Update API Usage Limits]
+      AS -- No --> AN
+      AT --> C
+      C --> AU{Notifications & Customer Support}
+      AU -- View Alerts --> AV[Display Notifications]
+      AU -- Contact Support --> AW[Open Live Chat]
+      AV --> AX{Alert Actions}
+      AX -- View Details --> AY[Open Notification Details]
+      AX -- Dismiss Alert --> AZ[Remove Alert]
+      AY --> C
+      AZ --> AV
+      AW --> BA{Chat Actions}
+      BA -- Send Message --> BB[Send Message to Support]
+      BA -- End Chat --> BC[Close Chat]
+      BB --> AW
+      BC --> C
+    </pre>
 
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });
       
-      // Initialize Mermaid once here. We'll re-initialize before each render as well.
-      mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
-
-      const input_prompt = document.getElementById("prompt");
-      const flow_btn = document.getElementById("flow");
-      const sd_btn = document.getElementById("sd");
-      const downloadSvgBtn = document.getElementById("downloadSvg");
-      const area = document.querySelector(".mermaid");
-
-      // Helper function to re-render and display the Mermaid diagram
-      async function renderMermaid(graphDefinition) {
-        // Re-initialize mermaid before each new render
-        mermaid.initialize({ startOnLoad: false, securityLevel: "loose" });
-        // Use mermaid.render() to generate SVG code from the definition
-        const { svg } = await mermaid.render("mermaidGraph", graphDefinition);
-        area.innerHTML = svg;
-        area.style.display = "block";
-      }
-
-      // Event listener for "Generate Design Flow"
-      flow_btn.addEventListener("click", async (event) => {
-        event.preventDefault();
-
-        const userPrompt = input_prompt.value.trim();
-        if (!userPrompt) {
-          alert("Please enter something!");
-          return;
-        }
-
-        try {
-          const apiUrl = "http://localhost:5000/system_design/api/design_flow";
-          const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: userPrompt }),
-          });
-          const data = await response.json();
-          const graphDefinition = data.final_response;
-          await renderMermaid(graphDefinition);
-        } catch (error) {
-          console.error("Error fetching design flow:", error);
-        }
-      });
-
-      // Event listener for "Generate System Design"
-      sd_btn.addEventListener("click", async (event) => {
-        event.preventDefault();
-
-        const userPrompt = input_prompt.value.trim();
-        if (!userPrompt) {
-          alert("Please enter something!");
-          return;
-        }
-
-        try {
-          const apiUrl = "http://localhost:5000/system_design/api/system_design";
-          const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: userPrompt }),
-          });
-          const data = await response.json();
-          const graphDefinition = data.final_response;
-          await renderMermaid(graphDefinition);
-        } catch (error) {
-          console.error("Error fetching system design:", error);
-        }
-      });
-
-      // Event listener for "Download as SVG"
-      downloadSvgBtn.addEventListener("click", () => {
-        // Find the rendered <svg> inside the .mermaid container
-        const svgElem = document.querySelector(".mermaid svg");
-
-        if (!svgElem) {
-          alert("No diagram available to download!");
-          return;
-        }
-
-        // Convert the SVG DOM node to a string
-        const serializer = new XMLSerializer();
-        const svgStr = serializer.serializeToString(svgElem);
-
-        // Create a blob out of the SVG string
-        const blob = new Blob([svgStr], { type: "image/svg+xml" });
-        const url = URL.createObjectURL(blob);
-
-        // Create an <a> element to trigger the download
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "mermaid-diagram.svg";
-        document.body.appendChild(link);
-        link.click();
-
-        // Cleanup
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      });
     </script>
   </body>
 </html>
