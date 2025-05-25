@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genai = new GoogleGenerativeAI(`${process.env.GEMINI_API_KEY}`);
-const model = genai.getGenerativeModel({ model: "gemini-2.0-flash" });
-// const model = genai.getGenerativeModel({model: "tunedModels/designease-6ru3p5ncwkww"})
+// const model = genai.getGenerativeModel({ model: "gemini-2.0-flash" });
+const model = genai.getGenerativeModel({model: "tunedModels/designease-6ru3p5ncwkww"})
 
 const training_flowchart = async (req, res) => {
   console.log("Training flowchart");
