@@ -13,7 +13,7 @@ const training_flowchart = async (req, res) => {
         B -->|Yes| C[OK]
         C --> D[Rethink]
         D --> B
-        B ---->|No| E[End]
+        B ---->|No| E[End] 
 
 
     syntax 2 : 
